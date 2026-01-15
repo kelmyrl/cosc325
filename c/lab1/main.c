@@ -31,7 +31,7 @@ void increment(int *x) {
 
 int main() {
 
-    /* ===== Part 1 ===== */
+    /* ===== Part 1 ===== hello */
     printf("--- Part 1: State and Sequence ---\n");
 
     int x = 2;
