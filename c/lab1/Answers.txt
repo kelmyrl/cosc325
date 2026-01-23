@@ -1,19 +1,20 @@
 Reflection 1.1: I think it will print 20. What changed over time was the state of the variable because it is 
-getting reassigned with new expressions. 
+getting reassigned with new expressions. The intermediate values "lived" on the stack while the program ran.
 
-Reflection 1.2: Yes the meaning changed. Imperative languages care about order because they are compiled from the top of the file 
-to the bottom, so this mean that the order is necessary.
+Reflection 1.2: Yes the meaning changed. Imperative languages care about order because they rely on a step-by-step sequence 
+of instructions to change variables, so this mean that the order is necessary.
 
 Reflection 2.1: In the main.c file, control happens on line 17 where we have our 3 distinct expressions for our for loop and 
 the state changes on line 18 where we reassign the total.
 
 Reflection 2.2: Those versions hide the mechanics of iterations where as in my C version I had to spell out the initialion,
- loop condition, and the incremantion. 
+loop condition, and the incremantion. 
 
-Reflection 3.1: C requires you to write the data types, where as in JAva/Python it often infer it automatically.
+Reflection 3.1: C requires you to handle certain aspects of doubles such as explicit type casting, where as in Java/Python it often
+infers it automatically.
 
 Reflection 4.1: a did not change because C uses pass-by-values to pass arguments to functions. Meaning that the a variable and 
-the x variable are in to different memory locations.
+the x variable are in two different memory locations.
 
 Refelection 4.2: A pointer allows you to share and modify the exact same memory location, allowing state sharing.
 
