@@ -12,14 +12,23 @@
 /* ===== Part 2 ===== */
 int sum_to(int n) {
     // TODO: implement using a for loop and mutable local state
+    int i;
+    int total = 0;
+    for (i=1; i<=n; i++) {
+        total += i;
+    }
+    return total;
     return 0;
 }
 
 /* ===== Part 3 ===== */
 double avg_1_to_n(int n) {
     // TODO: call sum_to(n)
+    double average = (double)sum_to(n) / (double) n;
     // HINT: cast to double to avoid integer division
+    return average;
     return 0.0;
+
 }
 
 /* ===== Part 4 ===== */
@@ -29,6 +38,7 @@ void increment_bad(int x) {
 
 void increment(int *x) {
     // TODO: fix using a pointer
+    (*x)++;
 }
 
 int main() {
@@ -37,6 +47,7 @@ int main() {
     printf("--- Part 1: State and Sequence ---\n");
 
     int x = 2;
+    //x = x * 4;
     x = x + 3;
     x = x * 4;
     printf("x=%d\n", x);
