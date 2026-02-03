@@ -1,1 +1,4 @@
-(sum + 47.5) / "three" + 4.total
+10 LET A = 3
+20 B LET = 4
+30 LET C = A * B
+40 PRINT A, B, C

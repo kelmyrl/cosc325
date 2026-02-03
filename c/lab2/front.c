@@ -43,10 +43,15 @@ int lex();
 #define DIV_OP 24
 #define LEFT_PAREN 25
 #define RIGHT_PAREN 26
-#define COMMA 27
 #define PRINT 30
-#define INPUT 31
-#define GOSUB 32
+#define IF 31
+#define THEN 32
+#define GOTO 33
+#define GOSUB 34
+#define INPUT 35
+#define LET 36
+#define COMMA 40
+
 /******************************************************/
 /* main driver */
 int main()
@@ -114,7 +119,7 @@ int lookup(char ch)
 
   case '>':
     addChar();
-    nextToken = GT_OP;
+    nextToken = RT_OP;
     break;
 
   case ',':
@@ -189,7 +194,10 @@ int keywordLookup() {
     return INPUT;
   else if (strcmp(lexeme,"GOSUB")==0)
     return GOSUB;
-  else if (strcmp(lexeme,"INDENT")==0)
+  else if (strcmp(lexeme,"LET")==0)
+    return LET;
+  //else if ... finish all the keywords!
+  else
     return IDENT;
   
 }
@@ -227,18 +235,7 @@ int lex()
       addChar();
       getChar();
     }
-    if (nextChar == '.') {
-      addChar();
-      getChar();
-      while (charClass == DIGIT)
-      {
-        addChar();
-        getChar();
-      }
-      nextToken = FLOAT_LIT;
-    } else {
-      nextToken = INT_LIT;
-    }
+    nextToken = INT_LIT;
     break;
 
   case QUOTE:
