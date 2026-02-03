@@ -14,10 +14,9 @@ char nextChar;
 int lexLen;
 int token;
 int nextToken;
-FILE *in_fp, *fopen();
-=======
+
 FILE *in_fp; /*, *fopen(); */
->>>>>>> lab2
+
 /* Function declarations */
 void addChar();
 void getChar();
@@ -47,6 +46,7 @@ int lex();
 #define COMMA 27
 #define PRINT 30
 #define INPUT 31
+#define GOSUB 32
 /******************************************************/
 /* main driver */
 int main()
@@ -126,7 +126,7 @@ int lookup(char ch)
     addChar();
     printf("Unexpected symbol found: %c while working on the current lexeme: %s\n", nextChar, lexeme);
     exit(1);
->>>>>>> lab2
+
     nextToken = EOF;
     break;
   }
@@ -179,16 +179,8 @@ void getNonBlank()
     getChar();
 }
 
-int keywordLookup() {
-    if(strcmp(lexeme, "PRINT") == 0) {
-        return PRINT; // Arbitrary token code for keywords
-    }
-    else if (strcmp(lexeme, "INPUT") == 0){
-      return INPUT;
-    }
-    //do the rest
+
     
-=======
 /* examines current lexeme and returns specific token or IDENT if it's not a keyword */
 int keywordLookup() {
   if (strcmp(lexeme,"PRINT")==0 || strcmp(lexeme,"PR")==0)
@@ -197,21 +189,17 @@ int keywordLookup() {
     return INPUT;
   else if (strcmp(lexeme,"GOSUB")==0)
     return GOSUB;
-  else if ... finish all the keywords!
-  else
+  else if (strcmp(lexeme,"INDENT")==0)
     return IDENT;
   
->>>>>>> lab2
 }
 
 /*****************************************************/
 /* lex - a simple lexical analyzer for arithmetic
          expressions */
-=======
-         expressions 
+        
    // depends on charClass and nextChar already being set by the caller
-         */
->>>>>>> lab2
+
 int lex()
 {
   lexLen = 0;
@@ -228,52 +216,6 @@ int lex()
       getChar();
     }
     nextToken = keywordLookup();
-    break;
-
-    /* Parse integer literals */
-  case DIGIT:
-    addChar();
-    getChar();
-    while (charClass == DIGIT)
-    {
-      addChar();
-      getChar();
-    }
-    if(nextChar == '.') {
-        addChar();
-        getChar();
-        while (charClass == DIGIT)
-        {
-          addChar();
-          getChar();
-        }
-        nextToken = FLOAT_LIT;
-        
-    } else {
-        nextToken = INT_LIT;
-    }
-    break;
-  
-  case QUOTE:
-    addChar();
-    getChar();
-    while(charClass != QUOTE) {
-        addChar();
-        getChar();
-    }
-    addChar(); 
-    getChar();
-    nextToken = STR_LIT;
-    break;
-
-
-    /* Parentheses and operators */
-  case UNKNOWN:
-    lookup(nextChar);
-    getChar();
-    break;
-
-=======
     break;
 
     /* Parse integer literals */
@@ -318,7 +260,6 @@ int lex()
     getChar();
     break;
 
->>>>>>> lab2
     /* EOF */
   case EOF:
     nextToken = EOF;
