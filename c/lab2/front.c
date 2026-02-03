@@ -15,6 +15,9 @@ int lexLen;
 int token;
 int nextToken;
 FILE *in_fp, *fopen();
+=======
+FILE *in_fp; /*, *fopen(); */
+>>>>>>> lab2
 /* Function declarations */
 void addChar();
 void getChar();
@@ -34,6 +37,11 @@ int lex();
 #define IDENT 11
 #define GT_OP 18
 #define LT_OP 19
+=======
+#define IDENT 11
+#define LT_OP 18
+#define RT_OP 19
+>>>>>>> lab2
 #define EQUALS_OP 20
 #define ADD_OP 21
 #define SUB_OP 22
@@ -41,6 +49,7 @@ int lex();
 #define DIV_OP 24
 #define LEFT_PAREN 25
 #define RIGHT_PAREN 26
+
 /******************************************************/
 /* main driver */
 int main()
@@ -101,6 +110,9 @@ int lookup(char ch)
     nextToken = EQUALS_OP;
     break;
   
+=======
+
+>>>>>>> lab2
   case '<':
     addChar();
     nextToken = LT_OP;
@@ -114,6 +126,14 @@ int lookup(char ch)
   default:
     addChar();
     nextToken = EOF;
+=======
+    nextToken = RT_OP;
+
+  default:
+    addChar();
+    printf("Unexpected symbol found: %c while working on the current lexeme: %s\n", nextChar, lexeme);
+    exit(1);
+>>>>>>> lab2
     break;
   }
   return nextToken;
@@ -174,11 +194,30 @@ int keywordLookup() {
     }
     //do the rest
     
+=======
+/* examines current lexeme and returns specific token or IDENT if it's not a keyword */
+int keywordLookup() {
+  if (strcmp(lexeme,"PRINT")==0 || strcmp(lexeme,"PR")==0)
+    return PRINT;
+  else if (strcmp(lexeme,"INPUT")==0)
+    return INPUT;
+  else if (strcmp(lexeme,"GOSUB")==0)
+    return GOSUB;
+  else if ... finish all the keywords!
+  else
+    return IDENT;
+  
+>>>>>>> lab2
 }
 
 /*****************************************************/
 /* lex - a simple lexical analyzer for arithmetic
          expressions */
+=======
+         expressions 
+   // depends on charClass and nextChar already being set by the caller
+         */
+>>>>>>> lab2
 int lex()
 {
   lexLen = 0;
@@ -240,6 +279,52 @@ int lex()
     getChar();
     break;
 
+=======
+    break;
+
+    /* Parse integer literals */
+  case DIGIT:
+    addChar();
+    getChar();
+    while (charClass == DIGIT)
+    {
+      addChar();
+      getChar();
+    }
+    if (nextChar == '.') {
+      addChar();
+      getChar();
+      while (charClass == DIGIT)
+      {
+        addChar();
+        getChar();
+      }
+      nextToken = FLOAT_LIT;
+    } else {
+      nextToken = INT_LIT;
+    }
+    break;
+
+  case QUOTE:
+    addChar();
+    getChar();
+    while (charClass != QUOTE)
+    {
+      addChar(); 
+      getChar();
+    }
+    addChar();
+    getChar();
+    nextToken = STR_LIT;
+    break;
+
+    /* Parentheses and operators */
+  case UNKNOWN:
+    lookup(nextChar);
+    getChar();
+    break;
+
+>>>>>>> lab2
     /* EOF */
   case EOF:
     nextToken = EOF;
