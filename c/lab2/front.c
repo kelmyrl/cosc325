@@ -31,8 +31,10 @@ int lex();
 #define UNKNOWN 99
 
 /* Token codes */
+#define STR_LIT 8
 #define INT_LIT 10
 #define FLOAT_LIT 9
+<<<<<<< HEAD
 #define STR_LIT 8
 #define IDENT 11
 #define GT_OP 18
@@ -109,6 +111,7 @@ int lookup(char ch)
     addChar();
     nextToken = EQUALS_OP;
     break;
+<<<<<<< HEAD
   
 =======
 
@@ -120,6 +123,7 @@ int lookup(char ch)
 
   case '>':
     addChar();
+<<<<<<< HEAD
     nextToken = GT_OP;
     break;
 
@@ -185,6 +189,7 @@ void getNonBlank()
     getChar();
 }
 
+<<<<<<< HEAD
 int keywordLookup() {
     if(strcmp(lexeme, "PRINT") == 0) {
         return PRINT; // Arbitrary token code for keywords
@@ -212,6 +217,7 @@ int keywordLookup() {
 
 /*****************************************************/
 /* lex - a simple lexical analyzer for arithmetic
+<<<<<<< HEAD
          expressions */
 =======
          expressions 
@@ -234,6 +240,7 @@ int lex()
       getChar();
     }
     nextToken = keywordLookup();
+<<<<<<< HEAD
     break;
 
     /* Parse integer literals */
