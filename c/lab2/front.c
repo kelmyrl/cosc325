@@ -31,19 +31,12 @@ int lex();
 #define UNKNOWN 99
 
 /* Token codes */
-#define STR_LIT 8
 #define INT_LIT 10
 #define FLOAT_LIT 9
-<<<<<<< HEAD
 #define STR_LIT 8
 #define IDENT 11
 #define GT_OP 18
 #define LT_OP 19
-=======
-#define IDENT 11
-#define LT_OP 18
-#define RT_OP 19
->>>>>>> lab2
 #define EQUALS_OP 20
 #define ADD_OP 21
 #define SUB_OP 22
@@ -51,7 +44,9 @@ int lex();
 #define DIV_OP 24
 #define LEFT_PAREN 25
 #define RIGHT_PAREN 26
-
+#define COMMA 27
+#define PRINT 30
+#define INPUT 31
 /******************************************************/
 /* main driver */
 int main()
@@ -111,11 +106,7 @@ int lookup(char ch)
     addChar();
     nextToken = EQUALS_OP;
     break;
-<<<<<<< HEAD
   
-=======
-
->>>>>>> lab2
   case '<':
     addChar();
     nextToken = LT_OP;
@@ -123,21 +114,20 @@ int lookup(char ch)
 
   case '>':
     addChar();
-<<<<<<< HEAD
     nextToken = GT_OP;
     break;
 
-  default:
+  case ',':
     addChar();
-    nextToken = EOF;
-=======
-    nextToken = RT_OP;
+    nextToken = COMMA;
+    break;
 
   default:
     addChar();
     printf("Unexpected symbol found: %c while working on the current lexeme: %s\n", nextChar, lexeme);
     exit(1);
 >>>>>>> lab2
+    nextToken = EOF;
     break;
   }
   return nextToken;
@@ -189,7 +179,6 @@ void getNonBlank()
     getChar();
 }
 
-<<<<<<< HEAD
 int keywordLookup() {
     if(strcmp(lexeme, "PRINT") == 0) {
         return PRINT; // Arbitrary token code for keywords
@@ -217,7 +206,6 @@ int keywordLookup() {
 
 /*****************************************************/
 /* lex - a simple lexical analyzer for arithmetic
-<<<<<<< HEAD
          expressions */
 =======
          expressions 
@@ -240,7 +228,6 @@ int lex()
       getChar();
     }
     nextToken = keywordLookup();
-<<<<<<< HEAD
     break;
 
     /* Parse integer literals */
