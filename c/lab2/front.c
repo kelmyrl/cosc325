@@ -119,7 +119,7 @@ int lookup(char ch)
 
   case '>':
     addChar();
-    nextToken = RT_OP;
+    nextToken = GT_OP;
     break;
 
   case ',':
