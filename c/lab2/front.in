@@ -2,3 +2,5 @@
 20 B LET = 4
 30 LET C = A * B
 40 PRINT A, B, C
+50 LIST
+60 RUN

@@ -50,7 +50,12 @@ int lex();
 #define GOSUB 34
 #define INPUT 35
 #define LET 36
+#define RETURN 37
+#define CLEAR 38
+#define LIST 39
 #define COMMA 40
+#define RUN 41
+#define END 42
 
 /******************************************************/
 /* main driver */
@@ -196,9 +201,25 @@ int keywordLookup() {
     return GOSUB;
   else if (strcmp(lexeme,"LET")==0)
     return LET;
-  //else if ... finish all the keywords!
+  else if (strcmp(lexeme,"IF")==0)
+    return IF;
+  else if (strcmp(lexeme,"THEN")==0)
+    return THEN;
+  else if (strcmp(lexeme,"GOTO")==0)
+    return GOTO;
+  else if (strcmp(lexeme,"RETURN")==0)
+    return RETURN;
+  else if (strcmp(lexeme,"CLEAR")==0)
+    return CLEAR;
+  else if (strcmp(lexeme,"LIST")==0)
+    return LIST;
+  else if (strcmp(lexeme,"RUN")==0)
+    return RUN;
+  else if (strcmp(lexeme,"END")==0)
+    return END;
   else
     return IDENT;
+  //else if ... finish all the keywords!
   
 }
 
