@@ -22,6 +22,7 @@ void addChar();
 void getChar();
 void getNonBlank();
 int lex();
+void skipComment();
 
 /* Character classes */
 #define LETTER 0
@@ -56,6 +57,10 @@ int lex();
 #define COMMA 40
 #define RUN 41
 #define END 42
+#define REM 43
+#define LE_OP 27
+#define GE_OP 28
+#define NE_OP 29
 
 /******************************************************/
 /* main driver */
@@ -119,12 +124,32 @@ int lookup(char ch)
   
   case '<':
     addChar();
-    nextToken = LT_OP;
+    if (nextChar == '=')
+    {
+      addChar();
+      nextToken = LE_OP;
+      getChar();
+    }
+    else if (nextChar == '>')
+    {
+      addChar();
+      nextToken = NE_OP;
+      getChar();
+    }
+    else
+      nextToken = LT_OP;
     break;
 
   case '>':
     addChar();
-    nextToken = GT_OP;
+    if (nextChar == '=')
+    {
+      addChar();
+      nextToken = GE_OP;
+      getChar();
+    }
+    else 
+      nextToken = GT_OP;
     break;
 
   case ',':
@@ -189,6 +214,18 @@ void getNonBlank()
     getChar();
 }
 
+/*****************************************************/
+/* skipComment - skip from REM to end of line */
+void skipComment()
+{
+  while (nextChar != '\n' && nextChar != '\r' && charClass != EOF)
+    getChar();
+  if (nextChar == '\r')
+    getChar();
+  if (nextChar == '\n')
+    getChar();
+}
+
 
     
 /* examines current lexeme and returns specific token or IDENT if it's not a keyword */
@@ -217,10 +254,10 @@ int keywordLookup() {
     return RUN;
   else if (strcmp(lexeme,"END")==0)
     return END;
+  else if (strcmp(lexeme,"REM")==0)
+    return REM;
   else
     return IDENT;
-  //else if ... finish all the keywords!
-  
 }
 
 /*****************************************************/
@@ -245,6 +282,12 @@ int lex()
       getChar();
     }
     nextToken = keywordLookup();
+    /* if REM, skip comment and get next token */
+    if (nextToken == REM)
+    {
+      skipComment();
+      return lex(); /* recursively get next token after comment */
+    }
     break;
 
     /* Parse integer literals */
