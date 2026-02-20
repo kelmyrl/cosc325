@@ -9,6 +9,8 @@ void line();
 void statement();
 void expr_list();
 void expression();
+void term();
+void factor();
 void relop();
 
 /******************************************************/
@@ -56,6 +58,7 @@ void statement() {
             expr_list();
             // unconditionally printf("\n");
             break;
+
         case IF:
             lex();
             expression(); 
@@ -72,11 +75,11 @@ void statement() {
             // we never need an extra call to lex() here 
             // because statement() ALWAYS has an extra call to lex()
             break;
+
         case GOTO:
             lex();
-
-            // extra call to lex to look for the carriage return
-            lex();
+            expression();
+            // no extra call to lex to look for the carriage return
             break;
 
         // keep going with more cases INPUT DOES NOT NEED THE EXTRA CALL TO LEX ... NEITHER DO THE ONES THAT ARE JUST KEYWORDS
@@ -87,27 +90,35 @@ void statement() {
 
         case LET:
             lex();
-
-            // extra call to lex to look for the carriage return
+            if (nextToken != IDENT) {
+                printf("Expecting IDENT but found: %d\n", nextToken);
+                exit(1);
+            }
             lex();
+            if (nextToken != EQUALS_OP) {
+                printf("Expecting EQ but found: %d\n", nextToken);
+                exit(1);
+            }
+            lex();
+            expression();
+
+            // no extra call to lex() here because expression() will have already called lex() for us when it was looking for +, -, *, or /
             break;
         
         case GOSUB:
             lex();
             expression();
 
-            // extra call to lex to look for the carriage return
-            lex();
+            // NO extra call to lex to look for the carriage return b/c expression() has an extra call to lex()
             break;
             
-        // case RETURN:
-        // case CLEAR:
-        // case LIST:
-        // case RUN:
-        // case END:
-        //     lex(); // this IS the extra call to lex() since nothing comes after these keywords
-        //     you probably need another call to lex() right here!!!!
-        //     break;
+        case RETURN:
+        case CLEAR:
+        case LIST:
+        case RUN:
+        case END:
+             lex(); // this IS the extra call to lex() since nothing comes after these keywords
+             break;
     }
 }
 
@@ -115,21 +126,26 @@ void statement() {
 // lex has ALREADY been called before expr_list
 void expr_list() {
     if (nextToken == STRING) {
-        // do nothing for this assignment
+        // extra call to lex() to look for the comma or carriage return after the string
+        lex();
+        // do nothing else for this assignment
         // but in the next assignment you will need to print something!
     } else {
         expression();
+        // expression ends with an extra call to lex() so we are already looking for the comma or carriage return by the time we get back here
     }
-    lex(); // extra call to look for the comma
     while (nextToken == COMMA) {
+        lex(); // move past the comma (i.e., consume the comma by looking for the next token after the comma)
         // next assignment: printf("\t");
         if (nextToken == STRING) {
-            // do nothing for this assignment
+            // extra call to lex() to look for the comma or carriage return after the string
+            lex();
+            // do nothing else for this assignment
             // but in the next assignment you will need to print something
         } else {
             expression();
+            // no extra call to lex() here because expression() will have already called lex() for us when it was looking for +, -, *, or /
         }
-        lex(); // extra call to look for the comma
         // there are only two valid tokens AT THIS SPOT
         if (nextToken != COMMA && nextToken != CR) {
             printf("Expecting COMMA or CR but found: %d\n", nextToken);
@@ -139,9 +155,62 @@ void expr_list() {
 }
 
 void expression() {
-    lex(); // you gotta do more than this!
+    if(nextToken == ADD_OP || nextToken == SUB_OP) {
+        lex(); // move past the leading + or - if it was there otherwise, the current nextToken is part of the term so no need to call lex()
+    }
+    term();
+    // no need to call lex() here because term() will have already called lex() for us when it was looking for * or /
+    while (nextToken == ADD_OP || nextToken == SUB_OP) {
+        lex(); // move past the + or -
+        term();
+        // remember, term() will have already called lex() for us when it was looking for * or / so no need to call it again here
+    }
+    // no need for extra call to lex() here because the while loop will have already called lex() for us when it was looking for + or -
+}
+
+void term() {
+   
+    factor();
+    while (nextToken == MULT_OP || nextToken == DIV_OP) {
+        lex(); // consume * or /
+        factor();
+    }
+}
+
+void factor() {
+    // factor ::= var | number | ( expression )
+    if (nextToken == IDENT || nextToken == NUMBER) {
+       
+        lex();
+    } else if (nextToken == LEFT_PAREN) {
+        lex(); // consume '('
+        expression();
+        if (nextToken != RIGHT_PAREN) {
+            printf("Expecting ) but found: %d\n", nextToken);
+            exit(1);
+        }
+        lex(); // consume ')'
+    } else {
+        printf("Unexpected token in factor: %d\n", nextToken);
+        exit(1);
+    }
 }
 
 void relop() {
-
+    // relop ::= < (>|=|epsilon) | > (<|=|epsilon) | =
+    if (nextToken == LT_OP) {
+       
+        if (nextChar == '>' || nextChar == '=') {
+            lex(); // consume the second char of the relop
+        }
+    } else if (nextToken == RT_OP) {
+        if (nextChar == '<' || nextChar == '=') {
+            lex();
+        }
+    } else if (nextToken == EQUALS_OP) {
+       
+    } else {
+        printf("Expecting relational operator but found: %d\n", nextToken);
+        exit(1);
+    }
 }
