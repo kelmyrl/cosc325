@@ -169,15 +169,48 @@ void expression() {
 }
 
 void term() {
-    // you gotta do something here ... should be very similar to expression() but looking for * and / instead of + and -
-    // note that term() will end up having an extra call to lex() at the end just like expression() does
+   
+    factor();
+    while (nextToken == MULT_OP || nextToken == DIV_OP) {
+        lex(); // consume * or /
+        factor();
+    }
 }
 
 void factor() {
-    // look back at the grammar for all the possibilities for a factor ... you need if else if to handle identifiers, numbers, and parenthesized expressions
-    // you should make very sure NOT to have an extra call to lex() here (finally!) because expression() and term() are the ones that need the extra calls to lex() to look for +, -, *, or /
+    // factor ::= var | number | ( expression )
+    if (nextToken == IDENT || nextToken == NUMBER) {
+       
+        lex();
+    } else if (nextToken == LEFT_PAREN) {
+        lex(); // consume '('
+        expression();
+        if (nextToken != RIGHT_PAREN) {
+            printf("Expecting ) but found: %d\n", nextToken);
+            exit(1);
+        }
+        lex(); // consume ')'
+    } else {
+        printf("Unexpected token in factor: %d\n", nextToken);
+        exit(1);
+    }
 }
 
 void relop() {
-
+    // relop ::= < (>|=|epsilon) | > (<|=|epsilon) | =
+    if (nextToken == LT_OP) {
+       
+        if (nextChar == '>' || nextChar == '=') {
+            lex(); // consume the second char of the relop
+        }
+    } else if (nextToken == RT_OP) {
+        if (nextChar == '<' || nextChar == '=') {
+            lex();
+        }
+    } else if (nextToken == EQUALS_OP) {
+       
+    } else {
+        printf("Expecting relational operator but found: %d\n", nextToken);
+        exit(1);
+    }
 }
