@@ -10,11 +10,14 @@
 /* Variables */
 int charClass;
 char lexeme[100];
+char rest_of_line[1000]; // should be enough room (hopefully) to store all the characters in the rest of the line
 char nextChar;
 int lexLen;
-int token;
+int token; // this is never used but your book gave it to us in the code
 int nextToken;
 FILE *in_fp; /*, *fopen(); */
+char* in_str; // "statement" we are currently processing when running a program
+int stri=-1; // position within string ... -1 means read from file
 /* Function declarations */
 void addChar();
 void getChar();
@@ -54,14 +57,12 @@ int lex();
 #define LIST 43
 #define CLEAR 44
 #define RUN 45
-#define RETURN 50
 #define CR 99
 
 
 /*****************************************************/
 /* lookup - a function to lookup operators and parentheses
             and return the token */
-
 int lookup(char ch)
 {
   switch (ch)
@@ -147,7 +148,12 @@ void addChar()
              input and determine its character class */
 void getChar()
 {
-  int c = getc(in_fp);
+  if (stri>=0 && stri>=strlen(in_str)) {
+    charClass = EOF;
+    nextChar = 0;
+    return;
+  }
+  int c = stri<0 ? getc(in_fp) : in_str[stri++];
   if (c == EOF)
   {
     charClass = EOF;
@@ -208,6 +214,25 @@ int keywordLookup() {
   else
     return IDENT;
   
+}
+
+void lex_endl() {
+  int i;
+  // read all the characters into a string but not the newline character
+  getChar(); // side effect of setting nextChar and charClass and advancing the filepointer
+  for (i=0; nextChar != '\n' && nextChar != EOF; i++) {
+    rest_of_line[i] = nextChar;
+    getChar();
+  }
+  rest_of_line[i] = 0; // string termination character
+  
+  // let's take care of the END first
+  // after we consume the entire line, if this is program is valid
+  // there should be a newline character at the end of the line
+  // and the nextToken should be pointing at CR
+  lexLen = 1;
+  strcpy(lexeme,"\n");
+  nextToken = CR;
 }
 
 /*****************************************************/
@@ -273,7 +298,7 @@ int lex()
     lexeme[3] = 0;
     break;
   } /* End of switch */
-  printf("Next token is: %d, Next lexeme is %s\n",
-         nextToken, lexeme);
+  //printf("Next token is: %d, Next lexeme is %s\n",
+  //       nextToken, lexeme);
   return nextToken;
 } /* End of function lex */
